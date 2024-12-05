@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>برنامج مراقبة المطابقة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+      direction: rtl;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .header-section {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-section">
+      <h1>برنامج مراقبة المطابقة</h1>
+    </div>
+    <label for="commerce-department">مديرية التجارة:</label>
+    <input id="commerce-department" type="text" placeholder="أدخل اسم مديرية التجارة">
+
+    <label for="commerce-inspection">مفتشية التجارة:</label>
+    <input id="commerce-inspection" type="text" placeholder="أدخل اسم مفتشية التجارة">
+
+    <label for="agent-names">اسم العون أو الأعوان:</label>
+    <textarea id="agent-names" rows="2" placeholder="أدخل أسماء الأعوان"></textarea>
+
+    <label for="product">اختر المنتج:</label>
+    <select id="product">
+      <option value="">-- اختر المنتج --</option>
+    </select>
+
+    <div id="properties"></div>
+    <button id="analyze">تحليل المطابقة</button>
+    <button id="generate-pdf">تصدير إلى PDF</button>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const data = {
+      products: [
+        {
+          id: 1,
+          name: "عصير البرتقال",
+          properties: [
+            {
+              name: "نسبة السكر",
+              legalValue: 10,
+              unit: "%",
+              source: "القانون رقم 123/2022، بتاريخ 01-01-2022، موضوعه تحديد نسب السكر المسموح بها في العصائر."
+            },
+            {
+              name: "درجة الحموضة",
+              legalValue: 4.5,
+              unit: "pH",
+              source: "القانون رقم 124/2022، بتاريخ 15-01-2022، موضوعه تحديد معايير الحموضة في المنتجات الغذائية."
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: "حليب معقم",
+          properties: [
+            {
+              name: "نسبة الدهون",
+              legalValue: 3.5,
+              unit: "%",
+              source: "القانون رقم 125/2022، بتاريخ 20-01-2022، موضوعه ضبط معايير الحليب المعقم."
+            }
+          ]
+        }
+      ]
+    };
+
+    const productSelect = document.getElementById("product");
+    data.products.forEach(product => {
+      const option = document.createElement("option");
+      option.value = product.id;
+      option.textContent = product.name;
+      productSelect.appendChild(option);
+    });
+
+    productSelect.addEventListener("change", () => {
+      const selectedProductId = parseInt(productSelect.value);
+      const selectedProduct = data.products.find(product => product.id === selectedProductId);
+      const propertiesDiv = document.getElementById("properties");
+
+      propertiesDiv.innerHTML = ""; // تنظيف الخصائص السابقة
+
+      if (selectedProduct) {
+        selectedProduct.properties.forEach(property => {
+          const label = document.createElement("label");
+          label.textContent = `${property.name} (${property.unit}):`;
+          const input = document.createElement("input");
+          input.type = "number";
+          input.dataset.legalValue = property.legalValue;
+          input.dataset.source = property.source;
+          propertiesDiv.appendChild(label);
+          propertiesDiv.appendChild(input);
+        });
+      }
+    });
+
+    document.getElementById("analyze").addEventListener("click", () => {
+      const inputs = document.querySelectorAll("#properties input");
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = ""; // تنظيف النتائج السابقة
+
+      inputs.forEach(input => {
+        const value = parseFloat(input.value);
+        const legalValue = parseFloat(input.dataset.legalValue);
+        const source = input.dataset.source;
+
+        if (value > legalValue) {
+          resultDiv.innerHTML += `<p style="color: red;">غير مطابق: ${input.previousSibling.textContent}. السند القانوني: ${source}</p>`;
+        } else {
+          resultDiv.innerHTML += `<p style="color: green;">مطابق: ${input.previousSibling.textContent}</p>`;
+        }
+      });
+    });
+
+    document.getElementById("generate-pdf").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const today = new Date();
+      const date = today.toLocaleDateString();
+      const time = today.toLocaleTimeString();
+
+      const commerceDepartment = document.getElementById("commerce-department").value;
+      const commerceInspection = document.getElementById("commerce-inspection").value;
+      const agentNames = document.getElementById("agent-names").value;
+
+      doc.text("تقرير مراقبة المطابقة", 105, 10, { align: "center" });
+      doc.text(`التاريخ: ${date} - التوقيت: ${time}`, 10, 20);
+      doc.text(`مديرية التجارة: ${commerceDepartment}`, 10, 30);
+      doc.text(`مفتشية التجارة: ${commerceInspection}`, 10, 40);
+      doc.text(`اسم العون/الأعوان: ${agentNames}`, 10, 50);
+
+      const resultDiv = document.getElementById("result").textContent;
+      doc.text("نتائج التحليل:", 10, 60);
+      doc.text(resultDiv, 10, 70);
+
+      doc.save(`تقرير_المطابقة_${date}.pdf`);
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</body>
+</html>
