@@ -1,191 +1,266 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>برنامج مراقبة المطابقة</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-      direction: rtl;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .header-section {
-      background-color: #007bff;
-      color: white;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire d'analyse des produits alimentaires</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            direction: ltr;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+        h1, h2 {
+            color: #4a4a4a;
+            text-align: center;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            direction: ltr;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 16px;
+        }
+        th {
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        td input[type="number"], td input[type="text"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80%;
+            font-size: 16px;
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            background-color: #e1f5fe;
+            border: 1px solid #0288d1;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultContainer {
+            display: none;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="header-section">
-      <h1>برنامج مراقبة المطابقة</h1>
+
+    <div class="container">
+        <!-- العناوين الجديدة -->
+        <h2 style="text-align:center; font-weight: bold;">
+            الجمهورية الجزائرية الديمقراطية الشعبية<br>
+            وزارة التجارة الداخلية وضبط السوق الوطنية
+        </h2>
+        <div style="text-align: right; margin-top: 10px;">
+            <label for="directorate">Direction du commerce de la wilaya de:</label>
+            <input type="text" id="directorate" placeholder="Nom de LA WILAYA" style="width: 60%; margin-bottom: 10px;">
+            <br>
+            <label for="inspection">Inspection du commerce:</label>
+            <input type="text" id="inspection" placeholder="Nom de l'Inspection" style="width: 60%; margin-bottom: 10px;">
+            <br>
+            <label for="agents">Les Agents:</label>
+            <input type="text" id="agents" placeholder="Les Noms des Agents" style="width: 60%; margin-bottom: 20px;">
+        </div>
+
+        <!-- باقي الكود الموجود بالفعل -->
+        <h1>Formulaire d'analyse des produits alimentaires</h1>
+        
+        <form id="inputForm">
+            <h2>Sélectionnez le produit pour analyse</h2>
+            <label for="productSelect">Choisir le produit:</label>
+            <select id="productSelect">
+                <option value="">Choisir un produit</option>
+                <option value="milk">Lait</option>
+                <option value="water">Eau</option>
+                <option value="cheese">Fromage</option>
+                <option value="juice">Jus</option>
+                <option value="softDrink">Boisson gazeuse</option>
+                <option value="tomatoPaste">Concentré de tomates</option>
+                <option value="coffee">Café</option>
+                <option value="meat">Viande</option>
+                <option value="oil">Huile de cuisson</option>
+                <option value="vinegar">Vinaigre</option>
+            </select>
+            
+            <div id="productDetails" style="display:none;">
+                <h2>Entrer les données pour l'analyse</h2>
+                <table id="criteriaTable">
+                    <!-- Le tableau apparaîtra ici en fonction du produit sélectionné -->
+                </table>
+                <button type="submit">Analyser le produit</button>
+            </div>
+        </form>
     </div>
-    <label for="commerce-department">مديرية التجارة:</label>
-    <input id="commerce-department" type="text" placeholder="أدخل اسم مديرية التجارة">
 
-    <label for="commerce-inspection">مفتشية التجارة:</label>
-    <input id="commerce-inspection" type="text" placeholder="أدخل اسم مفتشية التجارة">
+    <div id="resultContainer">
+        <div class="result" id="resultText">
+            <h2>Résultat final</h2>
+            <p id="resultMessage"></p>
+            <p id="reasonMessage"></p>
+            <p id="legalReference"></p>
+        </div>
+        <div class="footer">
+            <button id="saveBtn" onclick="saveAsPDF()">Enregistrer le rapport</button>
+        </div>
+    </div>
 
-    <label for="agent-names">اسم العون أو الأعوان:</label>
-    <textarea id="agent-names" rows="2" placeholder="أدخل أسماء الأعوان"></textarea>
-
-    <label for="product">اختر المنتج:</label>
-    <select id="product">
-      <option value="">-- اختر المنتج --</option>
-    </select>
-
-    <div id="properties"></div>
-    <button id="analyze">تحليل المطابقة</button>
-    <button id="generate-pdf">تصدير إلى PDF</button>
-
-    <div id="result" style="margin-top: 20px;"></div>
-  </div>
-
-  <script>
-    const data = {
-      products: [
-        {
-          id: 1,
-          name: "عصير البرتقال",
-          properties: [
-            {
-              name: "نسبة السكر",
-              legalValue: 10,
-              unit: "%",
-              source: "القانون رقم 123/2022، بتاريخ 01-01-2022، موضوعه تحديد نسب السكر المسموح بها في العصائر."
+    <script>
+        const productData = {
+            milk: {
+                criteria: [
+                    { name: "Matières grasses", range: "3.5% - 4.0%", legalRef: "Norme A" },
+                    { name: "pH", range: "6.5 - 6.7", legalRef: "Norme B" },
+                    { name: "Protéines", range: "3.0% - 3.5%", legalRef: "Norme C" },
+                    { name: "Additifs", range: "Non autorisés", legalRef: "Norme D" }
+                ]
             },
-            {
-              name: "درجة الحموضة",
-              legalValue: 4.5,
-              unit: "pH",
-              source: "القانون رقم 124/2022، بتاريخ 15-01-2022، موضوعه تحديد معايير الحموضة في المنتجات الغذائية."
+            water: {
+                criteria: [
+                    { name: "pH", range: "6.5 - 8.5", legalRef: "Norme E" },
+                    { name: "Chlorures", range: "Moins de 250 mg/L", legalRef: "Norme F" },
+                    { name: "Bactéries", range: "Absentes", legalRef: "Norme G" }
+                ]
+            },
+            juice: {
+                criteria: [
+                    { name: "Teneur en sucre", range: "15% - 20%", legalRef: "Norme H" },
+                    { name: "pH", range: "3.5 - 4.5", legalRef: "Norme I" },
+                    { name: "Additifs", range: "Non autorisés", legalRef: "Norme J" }
+                ]
+            },
+            // Ajoutez les critères pour les autres produits ici...
+        };
+
+        document.getElementById("productSelect").addEventListener("change", function () {
+            const product = this.value;
+            if (product) {
+                const productDetails = document.getElementById("productDetails");
+                const table = document.getElementById("criteriaTable");
+                table.innerHTML = ""; // Effacer le tableau précédent
+                
+                const criteria = productData[product].criteria;
+                
+                criteria.forEach((item, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td><input type="text" id="input${index}" name="input${index}" required></td>
+                        <td>${item.range}</td>
+                    `;
+                    table.appendChild(row);
+                });
+
+                // Ajouter la référence légale
+                const legalReferences = criteria.map(item => item.legalRef).join(", ");
+                document.getElementById("legalReference").innerText = "Référence légale: " + legalReferences;
+
+                productDetails.style.display = "block";
+            } else {
+                document.getElementById("productDetails").style.display = "none";
             }
-          ]
-        },
-        {
-          id: 2,
-          name: "حليب معقم",
-          properties: [
-            {
-              name: "نسبة الدهون",
-              legalValue: 3.5,
-              unit: "%",
-              source: "القانون رقم 125/2022، بتاريخ 20-01-2022، موضوعه ضبط معايير الحليب المعقم."
-            }
-          ]
-        }
-      ]
-    };
-
-    const productSelect = document.getElementById("product");
-    data.products.forEach(product => {
-      const option = document.createElement("option");
-      option.value = product.id;
-      option.textContent = product.name;
-      productSelect.appendChild(option);
-    });
-
-    productSelect.addEventListener("change", () => {
-      const selectedProductId = parseInt(productSelect.value);
-      const selectedProduct = data.products.find(product => product.id === selectedProductId);
-      const propertiesDiv = document.getElementById("properties");
-
-      propertiesDiv.innerHTML = ""; // تنظيف الخصائص السابقة
-
-      if (selectedProduct) {
-        selectedProduct.properties.forEach(property => {
-          const label = document.createElement("label");
-          label.textContent = `${property.name} (${property.unit}):`;
-          const input = document.createElement("input");
-          input.type = "number";
-          input.dataset.legalValue = property.legalValue;
-          input.dataset.source = property.source;
-          propertiesDiv.appendChild(label);
-          propertiesDiv.appendChild(input);
         });
-      }
-    });
 
-    document.getElementById("analyze").addEventListener("click", () => {
-      const inputs = document.querySelectorAll("#properties input");
-      const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = ""; // تنظيف النتائج السابقة
+        document.getElementById("inputForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            
+            const product = document.getElementById("productSelect").value;
+            const criteria = productData[product].criteria;
+            let resultText = "Tous les critères sont conformes.";
+            let reasonText = "";
+            let nonCompliant = false;
 
-      inputs.forEach(input => {
-        const value = parseFloat(input.value);
-        const legalValue = parseFloat(input.dataset.legalValue);
-        const source = input.dataset.source;
+            criteria.forEach((item, index) => {
+                const inputValue = document.getElementById(`input${index}`).value;
+                if (inputValue && !isValueWithinRange(inputValue, item.range)) {
+                    nonCompliant = true;
+                    resultText = "Produit non conforme";
+                    reasonText += `Critère ${item.name} non conforme. `;
+                }
+            });
 
-        if (value > legalValue) {
-          resultDiv.innerHTML += `<p style="color: red;">غير مطابق: ${input.previousSibling.textContent}. السند القانوني: ${source}</p>`;
-        } else {
-          resultDiv.innerHTML += `<p style="color: green;">مطابق: ${input.previousSibling.textContent}</p>`;
+            document.getElementById("resultMessage").innerText = resultText;
+            document.getElementById("reasonMessage").innerText = reasonText;
+
+            document.getElementById("resultContainer").style.display = "block";
+        });
+
+        function isValueWithinRange(value, range) {
+            // Fonction pour vérifier si la valeur est dans la plage spécifiée
+            // ...
         }
-      });
-    });
 
-    document.getElementById("generate-pdf").addEventListener("click", () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const today = new Date();
-      const date = today.toLocaleDateString();
-      const time = today.toLocaleTimeString();
+       function saveAsPDF() {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+    
+          const directorate = document.getElementById("directorate").value || "Non spécifié";
+          const inspection = document.getElementById("inspection").value || "Non spécifiée";
+          const agents = document.getElementById("agents").value || "Non spécifiés";
+    
+          doc.text("Rapport d'analyse de produit", 20, 20);
+          doc.text(`Produit: ${document.getElementById("productSelect").value}`, 20, 30);
+          doc.text(document.getElementById("resultMessage").innerText, 20, 40);
+          doc.text(document.getElementById("reasonMessage").innerText, 20, 50);
+          doc.text(document.getElementById("legalReference").innerText, 20, 60);
+    
+          // إضافة المعلومات الجديدة
+          doc.text(`Direction du commerce de la wilaya de: ${directorate}`, 20, 70);
+          doc.text(`Inspection du commerce: ${inspection}`, 20, 80);
+          doc.text(`Les Agents: ${agents}`, 20, 90);
 
-      const commerceDepartment = document.getElementById("commerce-department").value;
-      const commerceInspection = document.getElementById("commerce-inspection").value;
-      const agentNames = document.getElementById("agent-names").value;
+          doc.save("Rapport_Analyse.pdf");
+         }
+    </script>
 
-      doc.text("تقرير مراقبة المطابقة", 105, 10, { align: "center" });
-      doc.text(`التاريخ: ${date} - التوقيت: ${time}`, 10, 20);
-      doc.text(`مديرية التجارة: ${commerceDepartment}`, 10, 30);
-      doc.text(`مفتشية التجارة: ${commerceInspection}`, 10, 40);
-      doc.text(`اسم العون/الأعوان: ${agentNames}`, 10, 50);
-
-      const resultDiv = document.getElementById("result").textContent;
-      doc.text("نتائج التحليل:", 10, 60);
-      doc.text(resultDiv, 10, 70);
-
-      doc.save(`تقرير_المطابقة_${date}.pdf`);
-    });
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </body>
 </html>
