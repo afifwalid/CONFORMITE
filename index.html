@@ -96,7 +96,6 @@
 <body>
 
     <div class="container">
-        <!-- العناوين الجديدة -->
         <h2 style="text-align:center; font-weight: bold;">
             الجمهورية الجزائرية الديمقراطية الشعبية<br>
             وزارة التجارة الداخلية وضبط السوق الوطنية
@@ -112,7 +111,6 @@
             <input type="text" id="agents" placeholder="Les Noms des Agents" style="width: 60%; margin-bottom: 20px;">
         </div>
 
-        <!-- باقي الكود الموجود بالفعل -->
         <h1>Formulaire d'analyse des produits alimentaires</h1>
         
         <form id="inputForm">
@@ -178,7 +176,6 @@
                     { name: "Additifs", range: "Non autorisés", legalRef: "Norme J" }
                 ]
             },
-            // Ajoutez les critères pour les autres produits ici...
         };
 
         document.getElementById("productSelect").addEventListener("change", function () {
@@ -186,10 +183,9 @@
             if (product) {
                 const productDetails = document.getElementById("productDetails");
                 const table = document.getElementById("criteriaTable");
-                table.innerHTML = ""; // Effacer le tableau précédent
-                
+                table.innerHTML = "";
+
                 const criteria = productData[product].criteria;
-                
                 criteria.forEach((item, index) => {
                     const row = document.createElement("tr");
                     row.innerHTML = `
@@ -200,7 +196,6 @@
                     table.appendChild(row);
                 });
 
-                // Ajouter la référence légale
                 const legalReferences = criteria.map(item => item.legalRef).join(", ");
                 document.getElementById("legalReference").innerText = "Référence légale: " + legalReferences;
 
@@ -239,27 +234,26 @@
             // ...
         }
 
-       function saveAsPDF() {
-          const { jsPDF } = window.jspdf;
-          const doc = new jsPDF();
-    
-          const directorate = document.getElementById("directorate").value || "Non spécifié";
-          const inspection = document.getElementById("inspection").value || "Non spécifiée";
-          const agents = document.getElementById("agents").value || "Non spécifiés";
-    
-          doc.text("Rapport d'analyse de produit", 20, 20);
-          doc.text(`Produit: ${document.getElementById("productSelect").value}`, 20, 30);
-          doc.text(document.getElementById("resultMessage").innerText, 20, 40);
-          doc.text(document.getElementById("reasonMessage").innerText, 20, 50);
-          doc.text(document.getElementById("legalReference").innerText, 20, 60);
-    
-          // إضافة المعلومات الجديدة
-          doc.text(`Direction du commerce de la wilaya de: ${directorate}`, 20, 70);
-          doc.text(`Inspection du commerce: ${inspection}`, 20, 80);
-          doc.text(`Les Agents: ${agents}`, 20, 90);
+        function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-          doc.save("Rapport_Analyse.pdf");
-         }
+            const directorate = document.getElementById("directorate").value || "Non spécifié";
+            const inspection = document.getElementById("inspection").value || "Non spécifiée";
+            const agents = document.getElementById("agents").value || "Non spécifiés";
+
+            doc.text("Rapport d'analyse de produit", 20, 20);
+            doc.text(`Produit: ${document.getElementById("productSelect").value}`, 20, 30);
+            doc.text(document.getElementById("resultMessage").innerText, 20, 40);
+            doc.text(document.getElementById("reasonMessage").innerText, 20, 50);
+            doc.text(document.getElementById("legalReference").innerText, 20, 60);
+
+            doc.text(`Direction du commerce de la wilaya de: ${directorate}`, 20, 70);
+            doc.text(`Inspection du commerce: ${inspection}`, 20, 80);
+            doc.text(`Les Agents: ${agents}`, 20, 90);
+
+            doc.save("Rapport_Analyse.pdf");
+        }
     </script>
 
 </body>
